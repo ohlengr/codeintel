@@ -1,13 +1,13 @@
 package com.ohlengr.codeintel.api;
 
-import com.ohlengr.codeintel.scanner.RepositoryScanner;
+import com.ohlengr.codeintel.scanner.LocalRepositoryScanner;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 public class ScannerController {
-    private final RepositoryScanner localRepositoryScanner;
-    public ScannerController(RepositoryScanner localRepositoryScanner) {
+    private final LocalRepositoryScanner localRepositoryScanner;
+    public ScannerController(LocalRepositoryScanner localRepositoryScanner) {
         this.localRepositoryScanner = localRepositoryScanner;
     }
 
