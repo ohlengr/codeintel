@@ -1,7 +1,10 @@
 package com.ohlengr.codeintel.api;
 
+import com.ohlengr.codeintel.model.ScanResult;
 import com.ohlengr.codeintel.scanner.LocalRepositoryScanner;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -12,8 +15,7 @@ public class ScannerController {
     }
 
     @PostMapping("/scan")
-    public String scanRepository(@RequestParam String path) {
-        localRepositoryScanner.scan(path);
-        return "Scan initiated for: " + path;
+    public ScanResult scanRepository(@RequestParam String path) {
+        return localRepositoryScanner.scan(path);
     }
 }
