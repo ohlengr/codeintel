@@ -27,7 +27,7 @@ public class LocalRepositoryScanner implements RepositoryScanner {
         try (Stream<Path> pathStream = Files.walk(path)){
             List<SourceFile> sourceFile =  pathStream
                     .filter(Files::isRegularFile)
-                    .filter(p -> p.getFileName().toString().endsWith(".java"))
+                    .filter(p -> p.getFileName().toString().endsWith(".php"))
                     .map(p -> {
                         String fileName = p.getFileName().toString();
                         String extension = fileName.substring((fileName.lastIndexOf("."))+1);
@@ -36,7 +36,7 @@ public class LocalRepositoryScanner implements RepositoryScanner {
             count = sourceFile.size();
             return new ScanResult(repositoryPath, count, sourceFile);
         }catch (IOException e) {
-            throw new RuntimeException("Failed to read repository " + e);
+            throw new RuntimeException("Failed to read repository " + repositoryPath, e);
         }
     }
 }
