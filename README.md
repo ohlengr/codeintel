@@ -1,6 +1,8 @@
 # CodeIntel
 
-CodeIntel is an early-stage project focused on exploring and understanding software repositories.
+CodeIntel is an early-stage open-source project focused on helping developers explore and understand software repositories.
+
+The project is being developed incrementally, starting with local repository scanning and building toward deeper codebase understanding.
 
 ## Current Status
 
@@ -12,13 +14,14 @@ Implemented functionality:
 - Health-check API endpoint.
 - Local repository directory validation.
 - Recursive file discovery.
-- Java source-file filtering.
+- PHP source-file filtering.
 - Structured scan results returned as JSON.
+- Automated unit testing for file discovery and filtering.
 
 ## Technology Stack
 
 - Java 21
-- Spring Boot
+- Spring Boot 4.1.1
 - Maven
 
 ## Getting Started
@@ -26,15 +29,26 @@ Implemented functionality:
 ### Prerequisites
 
 - JDK 21
-- Maven
+- Git (for cloning the repository)
+
+The project includes a Maven Wrapper, so a separate Maven installation is not required.
 
 ### Run the application
 
-From the project root:
+Open a terminal in the project root and run:
+
+**Git Bash:**
 
 ```bash
 cd backend-java
-mvn spring-boot:run
+./mvnw spring-boot:run
+```
+
+**Windows PowerShell:**
+
+```powershell
+cd backend-java
+.\mvnw.cmd spring-boot:run
 ```
 
 The application runs on port `8080` by default.
@@ -51,15 +65,44 @@ Checks whether the backend is running.
 
 `POST /api/scan?path=<repository-path>`
 
-Scans a local directory and returns the discovered Java files as JSON.
+Scans a local directory and returns discovered PHP files as JSON.
 
-Example:
+Example using a local PHP project:
 
 ```bash
-curl -X POST "http://localhost:8080/api/scan?path=D:/projects/codeintel"
+curl -X POST "http://localhost:8080/api/scan?path=D:/path/to/your/php-project"
 ```
 
-The scanner currently identifies regular files ending in `.java` and returns their paths, filenames, extensions, and the total number of discovered files.
+Replace the example path with an existing directory on the machine running the backend.
+
+The scanner currently:
+
+1. Validates that the supplied path exists and is a directory.
+2. Recursively searches for regular files.
+3. Includes files ending in `.php`.
+4. Returns the repository path, total number of discovered files, and file details.
+
+Each discovered file includes its path, filename, and extension.
+
+**Current limitation:** PHP is the only source-file extension supported by the scanner at this stage.
+
+## Testing
+
+The backend includes a JUnit test for `LocalRepositoryScanner`.
+
+The test creates a temporary repository containing PHP and non-PHP files, including a PHP file in a nested directory.
+
+It verifies that:
+
+- Exactly two PHP files are discovered.
+- The expected filenames are returned.
+- Non-PHP files are excluded.
+
+Run the scanner test from the `backend-java` directory:
+
+```bash
+./mvnw test -Dtest=LocalRepositoryScannerTest
+```
 
 ## Project Structure
 
@@ -76,12 +119,18 @@ codeintel/
         │           ├── scanner/
         │           └── CodeintelApplication.java
         └── test/
+            └── java/
+                └── com/ohlengr/codeintel/
+                    └── scanner/
+                        └── LocalRepositoryScannerTest.java
 ```
 
 ## Development
 
-CodeIntel is under active development. Its functionality and architecture may change as implementation progresses.
+CodeIntel is under active development. Its architecture and functionality may change as the project evolves.
+
+The current focus is improving the reliability of repository scanning and establishing a foundation for future codebase analysis capabilities.
 
 ## License
 
-License not yet specified.
+A license has not yet been specified.
