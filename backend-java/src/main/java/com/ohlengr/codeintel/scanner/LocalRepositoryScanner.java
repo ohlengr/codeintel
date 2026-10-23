@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -23,7 +22,6 @@ public class LocalRepositoryScanner implements RepositoryScanner {
             throw new IllegalArgumentException("Invalid repository found at: " + path);
         }
 
-        int count = 0;
         try (Stream<Path> pathStream = Files.walk(path)){
             List<SourceFile> sourceFile =  pathStream
                     .filter(Files::isRegularFile)
@@ -33,8 +31,7 @@ public class LocalRepositoryScanner implements RepositoryScanner {
                         String extension = fileName.substring((fileName.lastIndexOf("."))+1);
                         return new SourceFile(p,fileName,extension);
                     }).toList();
-            count = sourceFile.size();
-            return new ScanResult(repositoryPath, count, sourceFile);
+            return new ScanResult(repositoryPath, sourceFile.size(), sourceFile);
         }catch (IOException e) {
             throw new RuntimeException("Failed to read repository " + repositoryPath, e);
         }
