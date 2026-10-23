@@ -2,9 +2,6 @@ package com.ohlengr.codeintel.scanner;
 
 import com.ohlengr.codeintel.model.ScanResult;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import com.ohlengr.codeintel.model.SourceFile;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -13,6 +10,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LocalRepositoryScannerTest {
     @TempDir
@@ -52,5 +51,14 @@ public class LocalRepositoryScannerTest {
                 IllegalArgumentException.class,
                 () -> scanner.scan(invalidPath)
         );
+    }
+
+    @Test
+    void testScanEmptyRepository() {
+        LocalRepositoryScanner scanner = new LocalRepositoryScanner();
+        ScanResult scanResult = scanner.scan(tempDir.toString());
+
+        assertEquals(0, scanResult.totalFiles());
+        assertTrue(scanResult.files().isEmpty());
     }
 }
