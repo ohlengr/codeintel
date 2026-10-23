@@ -28,9 +28,10 @@ public class LocalRepositoryScanner implements RepositoryScanner {
                     .filter(Files::isRegularFile)
                     .filter(p -> p.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".php"))
                     .map(p -> {
-                        String fileName = p.getFileName().toString().toLowerCase(Locale.ROOT);
+                        String fileName = p.getFileName().toString();
                         String extension = fileName.substring((fileName.lastIndexOf("."))+1);
-                        return new SourceFile(p,fileName,extension);
+                        String relativePath = path.relativize(p).toString().replace("\\", "/");
+                        return new SourceFile(relativePath,fileName,extension);
                     }).toList();
             return new ScanResult(repositoryPath, sourceFile.size(), sourceFile);
         }catch (IOException e) {

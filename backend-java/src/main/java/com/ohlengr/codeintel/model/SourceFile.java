@@ -2,5 +2,5 @@ package com.ohlengr.codeintel.model;
 
 import java.nio.file.Path;
 
-public record SourceFile(Path path, String fileName, String extension) {
+public record SourceFile(String path, String fileName, String extension) {
 }
