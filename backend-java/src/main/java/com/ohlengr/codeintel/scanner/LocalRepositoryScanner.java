@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Stream;
 
 @Service
@@ -25,9 +26,9 @@ public class LocalRepositoryScanner implements RepositoryScanner {
         try (Stream<Path> pathStream = Files.walk(path)){
             List<SourceFile> sourceFile =  pathStream
                     .filter(Files::isRegularFile)
-                    .filter(p -> p.getFileName().toString().endsWith(".php"))
+                    .filter(p -> p.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".php"))
                     .map(p -> {
-                        String fileName = p.getFileName().toString();
+                        String fileName = p.getFileName().toString().toLowerCase(Locale.ROOT);
                         String extension = fileName.substring((fileName.lastIndexOf("."))+1);
                         return new SourceFile(p,fileName,extension);
                     }).toList();

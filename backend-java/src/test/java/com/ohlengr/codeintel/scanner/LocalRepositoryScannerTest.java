@@ -20,6 +20,7 @@ public class LocalRepositoryScannerTest {
     @Test
     public void testLocalRepositoryScanner() throws IOException {
         Files.createFile(tempDir.resolve("index.php"));
+        Files.createFile(tempDir.resolve("LOGIN.PHP"));
         Files.createFile(tempDir.resolve("readme.txt"));
         Path ajaxTempDirPath = Files.createDirectory(tempDir.resolve("ajax"));
         Files.createFile(ajaxTempDirPath.resolve("request.php"));
@@ -31,12 +32,12 @@ public class LocalRepositoryScannerTest {
         LocalRepositoryScanner localRepositoryScanner = new LocalRepositoryScanner();
         ScanResult scanResult = localRepositoryScanner.scan(tempDir.toString());
 
-        assertEquals(2, scanResult.totalFiles());
+        assertEquals(3, scanResult.totalFiles());
 
         List<String> fileName = scanResult.files().stream().map(SourceFile::fileName).sorted().toList();
 
         assertEquals(
-                List.of("index.php", "request.php"),
+                List.of("index.php", "login.php", "request.php"),
                 fileName
         );
     }
