@@ -3,6 +3,7 @@ package com.ohlengr.codeintel.scanner;
 import com.ohlengr.codeintel.model.ScanResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.ohlengr.codeintel.model.SourceFile;
 import org.junit.jupiter.api.Test;
@@ -38,6 +39,18 @@ public class LocalRepositoryScannerTest {
         assertEquals(
                 List.of("index.php", "request.php"),
                 fileName
+        );
+    }
+
+    @Test
+    void testScanWithInvalidPath() {
+        LocalRepositoryScanner scanner = new LocalRepositoryScanner();
+
+        String invalidPath = tempDir.resolve("non-existent-directory").toString();
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> scanner.scan(invalidPath)
         );
     }
 }
