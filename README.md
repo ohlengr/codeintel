@@ -13,10 +13,10 @@ Implemented functionality:
 - Spring Boot application setup.
 - Health-check API endpoint.
 - Local repository directory validation.
-- Recursive file discovery.
-- PHP source-file filtering.
+- Recursive discovery of regular files.
+- Case-insensitive PHP source-file filtering.
 - Structured scan results returned as JSON.
-- Automated unit testing for file discovery and filtering.
+- Automated tests for file discovery, invalid repository paths, and empty repositories.
 
 ## Technology Stack
 
@@ -33,9 +33,9 @@ Implemented functionality:
 
 The project includes a Maven Wrapper, so a separate Maven installation is not required.
 
-### Run the application
+### Run the Application
 
-Open a terminal in the project root and run:
+Open a terminal in the project root and run one of the following commands.
 
 **Git Bash:**
 
@@ -79,26 +79,32 @@ The scanner currently:
 
 1. Validates that the supplied path exists and is a directory.
 2. Recursively searches for regular files.
-3. Includes files ending in `.php`.
+3. Includes files whose extension is `.php`, regardless of capitalization.
 4. Returns the repository path, total number of discovered files, and file details.
 
-Each discovered file includes its path, filename, and extension.
+Each discovered file currently includes its path, filename, and extension.
 
 **Current limitation:** PHP is the only source-file extension supported by the scanner at this stage.
 
 ## Testing
 
-The backend includes a JUnit test for `LocalRepositoryScanner`.
+The backend includes automated tests for `LocalRepositoryScanner`.
 
-The test creates a temporary repository containing PHP and non-PHP files, including a PHP file in a nested directory.
+The tests use JUnit and temporary directories to verify that:
 
-It verifies that:
-
-- Exactly two PHP files are discovered.
-- The expected filenames are returned.
+- PHP files are discovered in the repository root and nested directories.
+- PHP extensions are matched without regard to capitalization.
 - Non-PHP files are excluded.
+- An invalid or nonexistent repository path causes an `IllegalArgumentException`.
+- An empty repository produces an empty file list and a count of zero.
 
-Run the scanner test from the `backend-java` directory:
+Run all backend tests from the `backend-java` directory:
+
+```bash
+./mvnw test
+```
+
+To run only the scanner tests:
 
 ```bash
 ./mvnw test -Dtest=LocalRepositoryScannerTest
@@ -129,7 +135,7 @@ codeintel/
 
 CodeIntel is under active development. Its architecture and functionality may change as the project evolves.
 
-The current focus is improving the reliability of repository scanning and establishing a foundation for future codebase analysis capabilities.
+The current focus is improving repository-scanning reliability and establishing a foundation for future codebase analysis capabilities.
 
 ## License
 
