@@ -26,10 +26,6 @@ public class LocalRepositoryScannerTest {
         Path ajaxTempDirPath = Files.createDirectory(tempDir.resolve("ajax"));
         Files.createFile(ajaxTempDirPath.resolve("request.php"));
 
-//        try(var paths = Files.walk(tempDir)){
-//            paths.forEach(System.out::println);
-//        }
-
         LocalRepositoryScanner localRepositoryScanner = new LocalRepositoryScanner();
         ScanResult scanResult = localRepositoryScanner.scan(tempDir.toString());
 
@@ -48,6 +44,10 @@ public class LocalRepositoryScannerTest {
                 scanResult.files().stream()
                         .anyMatch(file -> file.fileName().equals("LOGIN.PHP"))
         );
+
+        assertEquals(1, scanResult.totalDirectories());
+
+        assertEquals(List.of("ajax"), scanResult.directories());
     }
 
     @Test
@@ -69,5 +69,8 @@ public class LocalRepositoryScannerTest {
 
         assertEquals(0, scanResult.totalFiles());
         assertTrue(scanResult.files().isEmpty());
+
+        assertEquals(0, scanResult.totalDirectories());
+        assertTrue(scanResult.directories().isEmpty());
     }
 }

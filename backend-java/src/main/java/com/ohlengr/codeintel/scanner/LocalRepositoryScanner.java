@@ -23,8 +23,15 @@ public class LocalRepositoryScanner implements RepositoryScanner {
             throw new IllegalArgumentException("Invalid repository found at: " + path);
         }
 
+        List<Path> allPaths;
         try (Stream<Path> pathStream = Files.walk(path)){
-            List<SourceFile> sourceFile =  pathStream
+            allPaths = pathStream.toList();
+            List<String> directories =  allPaths.stream()
+                    .filter(Files::isDirectory)
+                    .filter(p -> !p.equals(path))
+                    .map(p -> path.relativize(p).toString().replace("\\", "/"))
+                    .toList();
+            List<SourceFile> sourceFile = allPaths.stream()
                     .filter(Files::isRegularFile)
                     .filter(p -> p.getFileName().toString().toLowerCase(Locale.ROOT).endsWith(".php"))
                     .map(p -> {
@@ -34,7 +41,7 @@ public class LocalRepositoryScanner implements RepositoryScanner {
                         String relativePath = path.relativize(p).toString().replace("\\", "/");
                         return new SourceFile(relativePath,fileName,extension);
                     }).toList();
-            return new ScanResult(repositoryPath, sourceFile.size(), sourceFile);
+            return new ScanResult(repositoryPath, sourceFile.size(), sourceFile, directories.size(), directories);
         }catch (IOException e) {
             throw new RuntimeException("Failed to read repository " + repositoryPath, e);
         }
