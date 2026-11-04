@@ -1,4 +1,11 @@
 package com.ohlengr.codeintel.model;
 
-public record RepositoryStructure(long totalDirectories) {
+import java.util.List;
+
+public record RepositoryStructure(
+        List<String> topLevelDirectories
+) {
+    public RepositoryStructure{
+        topLevelDirectories = List.copyOf(topLevelDirectories);
+    }
 }
